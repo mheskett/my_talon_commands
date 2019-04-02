@@ -1,0 +1,19 @@
+### password module uses mac keychain
+
+from talon import keychain
+from talon.voice import Context, Key, Str
+
+def insert(service, user=None):
+    if user is None:
+        user = service
+    def wrapper(m):
+        pw = keychain.find(service, user)
+        Str(pw)(None)
+    return wrapper
+
+ctx = Context('passwords')
+ctx.keymap({
+    'spoken phrase': insert('application name', 'account name'),
+})
+
+# add this to ./repl command line to get keychain added keychain.add('service', 'username', 'password')
